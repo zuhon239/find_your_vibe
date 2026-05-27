@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Vibe ✦</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple-50: #EEEDFE;
+    --purple-100: #CECBF6;
+    --purple-200: #AFA9EC;
+    --purple-400: #7F77DD;
+    --purple-600: #534AB7;
+    --purple-800: #3C3489;
+    --purple-900: #26215C;
+    --white: #ffffff;
+    --text: #3C3489;
+    --muted: #534AB7;
+    --hint: #AFA9EC;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: #F7F6FF;
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--text);
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 15% 20%, #EEEDFE 0%, transparent 45%),
+      radial-gradient(circle at 85% 75%, #E8E6FD 0%, transparent 45%);
+  }
+
+  #app {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+    min-height: 100vh;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== HOME ===== */
+  .home-wrap {
+    padding-top: 52px;
+    text-align: center;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 999px;
+    padding: 7px 20px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 12px rgba(127,119,221,0.1);
+  }
+  .logo-badge span {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--purple-600);
+    letter-spacing: 0.1em;
+  }
+  .logo-star { color: var(--purple-400); font-size: 14px; }
+
+  .home-title {
+    font-size: clamp(2.2rem, 8vw, 3rem);
+    font-weight: 900;
+    color: var(--purple-800);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .home-title .accent { color: var(--purple-400); }
+
+  .home-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.65;
+    max-width: 380px;
+    margin: 0 auto 32px;
+  }
+
+  .card-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 380px;
+    margin: 0 auto 36px;
+  }
+  .card-item {
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: left;
+  }
+  .card-item .ci-icon { font-size: 1.4rem; margin-bottom: 6px; display: block; }
+  .card-item .ci-label { font-size: 12px; font-weight: 800; color: var(--purple-800); display: block; }
+  .card-item .ci-sub { font-size: 11px; font-weight: 600; color: var(--hint); display: block; margin-top: 2px; }
+
+  .btn-start {
+    background: var(--purple-400);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 48px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 4px 20px rgba(127,119,221,0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .btn-start:hover {
+    background: var(--purple-600);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(127,119,221,0.4);
+  }
+  .btn-start:active { transform: scale(0.98); }
+
+  .home-note { font-size: 12px; color: var(--hint); font-weight: 600; }
+
+  /* ===== QUIZ ===== */
+  .quiz-wrap { padding-top: 28px; }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .prog-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--purple-400);
+    letter-spacing: 0.05em;
+  }
+  .prog-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--hint);
+  }
+  .progress-bar {
+    width: 100%;
+    height: 7px;
+    background: var(--purple-50);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    border: 1px solid var(--purple-100);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple-200), var(--purple-400));
+    border-radius: 999px;
+    transition: width 0.45s cubic-bezier(.4,0,.2,1);
+  }
+
+  .q-card {
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 4px 24px rgba(127,119,221,0.08);
+  }
+  .q-step {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--purple-200);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--purple-800);
+    line-height: 1.45;
+    margin-bottom: 22px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .opt-btn {
+    background: #FAFAFE;
+    border: 2px solid var(--purple-100);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--purple-800);
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+  }
+  .opt-btn:hover {
+    border-color: var(--purple-400);
+    background: var(--purple-50);
+    transform: translateX(4px);
+  }
+  .opt-btn.selected {
+    border-color: var(--purple-400);
+    background: var(--purple-50);
+  }
+  .opt-key {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 9px;
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 12px;
+    color: var(--purple-400);
+    transition: all 0.18s;
+  }
+  .opt-btn.selected .opt-key {
+    background: var(--purple-400);
+    color: #fff;
+    border-color: var(--purple-400);
+  }
+
+  /* ===== RESULT ===== */
+  .result-wrap { padding-top: 24px; }
+
+  .result-header {
+    text-align: center;
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 20px;
+    padding: 28px 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 24px rgba(127,119,221,0.08);
+  }
+  .result-emoji { font-size: 3rem; margin-bottom: 10px; display: block; }
+  .result-type-label {
+    display: inline-block;
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 999px;
+    padding: 4px 16px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--purple-600);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+  .result-title {
+    font-size: 1.65rem;
+    font-weight: 900;
+    color: var(--purple-800);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .result-role-pct {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--purple-400);
+  }
+
+  .bars-card {
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(127,119,221,0.06);
+  }
+  .bars-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--hint);
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .bar-row { margin-bottom: 12px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .bar-name {
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .bar-pct {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--purple-400);
+  }
+  .bar-track {
+    height: 9px;
+    background: var(--purple-50);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--purple-100);
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.85s cubic-bezier(.4,0,.2,1);
+  }
+
+  .desc-card {
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .desc-card p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .info-card {
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 14px;
+    padding: 14px 14px;
+  }
+  .info-card-title {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--hint);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .info-card ul { list-style: none; }
+  .info-card ul li {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--purple-800);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.4;
+  }
+  .info-card ul li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    min-width: 5px;
+    border-radius: 50%;
+    background: var(--purple-400);
+  }
+
+  .tags-card {
+    background: var(--white);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+  }
+  .tags-card-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--hint);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tag {
+    background: var(--purple-50);
+    border: 1.5px solid var(--purple-100);
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--purple-600);
+  }
+
+  .secondary-card {
+    background: var(--white);
+    border: 2px dashed var(--purple-100);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sec-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .sec-text { font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.5; }
+  .sec-text strong { font-size: 13px; font-weight: 800; color: var(--purple-800); display: block; margin-bottom: 2px; }
+
+  .quote-card {
+    background: var(--purple-800);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .quote-mark { font-size: 1.8rem; color: var(--purple-200); line-height: 1; display: block; margin-bottom: 4px; }
+  .quote-card p {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--purple-50);
+    line-height: 1.55;
+    font-style: italic;
+  }
+
+  .btn-retry {
+    display: block;
+    margin: 0 auto;
+    background: var(--purple-50);
+    color: var(--purple-600);
+    border: 2px solid var(--purple-100);
+    border-radius: 999px;
+    padding: 13px 36px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-retry:hover {
+    background: var(--purple-400);
+    color: #fff;
+    border-color: var(--purple-400);
+    box-shadow: 0 4px 16px rgba(127,119,221,0.3);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    .home-title { font-size: 2rem; }
+    .info-grid { grid-template-columns: 1fr; }
+    .q-card { padding: 20px 16px 18px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="home-wrap">
+      <div class="logo-badge">
+        <span class="logo-star">✦</span>
+        <span>FIND YOUR VIBE</span>
+        <span class="logo-star">✦</span>
+      </div>
+      <h1 class="home-title">Bạn thuộc<br><span class="accent">hệ sáng tạo</span> nào?</h1>
+      <p class="home-sub">10 câu hỏi nho nhỏ — kết quả siêu cá nhân hoá giúp bạn khám phá thiên hướng nghề nghiệp sáng tạo của mình 💜</p>
+
+      <div class="card-preview">
+        <div class="card-item">
+          <span class="ci-icon">🌟</span>
+          <span class="ci-label">Content Creator</span>
+          <span class="ci-sub">Creative Storyteller</span>
+        </div>
+        <div class="card-item">
+          <span class="ci-icon">📈</span>
+          <span class="ci-label">Product Marketing</span>
+          <span class="ci-sub">Insight Hunter</span>
+        </div>
+        <div class="card-item">
+          <span class="ci-icon">🎨</span>
+          <span class="ci-label">Designer</span>
+          <span class="ci-sub">Visual Creator</span>
+        </div>
+        <div class="card-item">
+          <span class="ci-icon">🚀</span>
+          <span class="ci-label">Strategist</span>
+          <span class="ci-sub">The Organizer</span>
+        </div>
+      </div>
+
+      <button class="btn-start" onclick="startQuiz()">✨ Bắt đầu thôi!</button>
+      <p class="home-note">Miễn phí · 2 phút · Không cần đăng ký</p>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-wrap">
+      <div class="top-bar">
+        <span class="prog-label" id="prog-label">TIẾN ĐỘ</span>
+        <span class="prog-num" id="prog-num">1 / 10</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill" style="width: 10%"></div>
+      </div>
+      <div class="q-card">
+        <div class="q-step" id="q-step">CÂU HỎI 01</div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result-wrap" id="result-content"></div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    text: "Khi tham gia một dự án mới, bạn thích làm gì nhất?",
+    opts: ["Nghĩ concept video/caption thật viral", "Tìm hiểu người xem muốn gì", "Thiết kế poster, màu sắc, layout", "Lên timeline và chia việc cho team"]
+  },
+  {
+    text: "Điều khiến bạn vui nhất khi đăng một sản phẩm lên mạng là…",
+    opts: ["Nhiều lượt xem và bình luận", "Mọi người thực sự bị thuyết phục", "Ai cũng khen đẹp và có gu", "Team chạy dự án mượt và đúng kế hoạch"]
+  },
+  {
+    text: "Bạn thường được bạn bè khen về điều gì?",
+    opts: ["Nói chuyện cuốn, nhiều ý tưởng content", "Biết phân tích và đưa ra hướng đi hợp lý", "Gu thẩm mỹ tốt", "Có trách nhiệm và tổ chức tốt"]
+  },
+  {
+    text: "Nếu được chọn một workshop miễn phí, bạn sẽ chọn…",
+    opts: ["Làm video TikTok triệu view", "Xây dựng thương hiệu và marketing", "Thiết kế bằng Figma/Photoshop", "Quản lý dự án sáng tạo"]
+  },
+  {
+    text: "Khi lướt mạng xã hội, bạn chú ý điều gì đầu tiên?",
+    opts: ["Nội dung có thú vị không", "Thương hiệu đang đánh vào insight gì", "Màu sắc, font chữ, bố cục", "Cách chiến dịch được triển khai"]
+  },
+  {
+    text: "Nếu phải làm truyền thông cho một quán cà phê, bạn sẽ…",
+    opts: ["Nghĩ challenge/video bắt trend", "Tìm nhóm khách hàng phù hợp", "Thiết kế menu và visual thật đẹp", "Lên kế hoạch truyền thông tổng thể"]
+  },
+  {
+    text: "Trong một nhóm bạn, bạn giống kiểu người…",
+    opts: ["Người tạo không khí vui vẻ", "Người đưa ra chiến lược", "Người chăm chút hình ảnh", "Người giữ mọi thứ ổn định"]
+  },
+  {
+    text: "Điều nào mô tả bạn đúng nhất?",
+    opts: ['"Mình có rất nhiều ý tưởng"', '"Mình thích hiểu tâm lý người khác"', '"Mình cực kỳ quan tâm cái đẹp"', '"Mình thích mọi thứ có kế hoạch"']
+  },
+  {
+    text: "Nếu có 24 giờ để tạo một sản phẩm mới, bạn ưu tiên…",
+    opts: ["Nội dung thật nổi bật", "Sản phẩm giải quyết đúng nhu cầu", "Giao diện thật đẹp mắt", "Phân chia công việc hiệu quả"]
+  },
+  {
+    text: "Bạn muốn được nhớ đến như một người…",
+    opts: ["Truyền cảm hứng và sáng tạo", "Thông minh và hiểu khách hàng", "Có gu và khác biệt", "Đáng tin cậy và dẫn dắt tốt"]
+  }
+];
+
+const TYPES = {
+  A: { name: "Content Creator", emoji: "🌟", color: "#E9A84C", bar: "#FAC775" },
+  B: { name: "Product Marketing", emoji: "📈", color: "#378ADD", bar: "#85B7EB" },
+  C: { name: "Designer", emoji: "🎨", color: "#D4537E", bar: "#ED93B1" },
+  D: { name: "Strategist", emoji: "🚀", color: "#1D9E75", bar: "#5DCAA5" }
+};
+
+const PROFILES = {
+  A: {
+    title: "Creative Storyteller",
+    typeName: "Content Creator",
+    desc: "Bạn có khả năng kể chuyện, tạo cảm xúc và thu hút người khác bằng nội dung. Bạn không thích những thứ quá khuôn mẫu — bạn thích tự do thể hiện cá tính qua video, caption, hình ảnh hoặc cách giao tiếp. Ý tưởng trong đầu bạn lúc nào cũng nhiều hơn thời gian để thực hiện!",
+    tags: ["Content Creator", "TikTok Creator", "Social Media Exec", "Copywriter", "MC / Host", "Creative Content"],
+    strengths: ["Nhiều ý tưởng", "Biết tạo cảm xúc", "Nhạy với xu hướng", "Kết nối mọi người"],
+    grows: ["Lên kế hoạch dài hạn", "Quản lý thời gian", "Biến ý tưởng thành chiến lược"],
+    quote: "Bạn không chỉ tạo nội dung — bạn tạo cảm xúc."
+  },
+  B: {
+    title: "Insight Hunter",
+    typeName: "Product Marketing",
+    desc: "Bạn thích tìm hiểu con người, hành vi và cách tạo ra sản phẩm hoặc chiến dịch phù hợp. Bạn có tư duy logic, nhìn được bức tranh lớn và thích giải quyết vấn đề một cách có chiến lược. Bạn luôn hỏi \"tại sao\" trước khi làm bất cứ điều gì.",
+    tags: ["Product Marketing", "Brand Strategist", "Planner", "Research & Insight", "Campaign Exec"],
+    strengths: ["Tư duy logic", "Hiểu khách hàng", "Chiến lược tốt", "Nhìn bức tranh lớn"],
+    grows: ["Thực thi sáng tạo", "Kỹ năng visual", "Linh hoạt với ideas"],
+    quote: "Bạn có khả năng biến ý tưởng thành thứ thật sự hiệu quả."
+  },
+  C: {
+    title: "Visual Creator",
+    typeName: "Designer",
+    desc: "Bạn cực kỳ nhạy cảm với hình ảnh, màu sắc và cảm xúc thị giác. Bạn chú ý những chi tiết mà người khác thường bỏ qua — và bạn có khả năng biến những thứ bình thường trở nên thu hút hơn. Mọi thứ trong mắt bạn đều có thể đẹp hơn một chút nữa.",
+    tags: ["Graphic Designer", "UI/UX Designer", "Art Director", "Motion Designer", "Branding Designer"],
+    strengths: ["Gu thẩm mỹ mạnh", "Tinh tế chi tiết", "Sáng tạo hình ảnh", "Aesthetic cao"],
+    grows: ["Kỹ năng thuyết trình", "Tư duy chiến lược", "Kỹ năng copywriting"],
+    quote: "Bạn có khả năng khiến mọi người dừng lại để nhìn."
+  },
+  D: {
+    title: "The Organizer",
+    typeName: "Creative Planner",
+    desc: "Bạn giỏi kết nối ý tưởng, con người và kế hoạch để mọi thứ vận hành trơn tru. Bạn đáng tin cậy, bình tĩnh và có tư duy hệ thống — đó là những phẩm chất cực kỳ hiếm và quý giá trong môi trường sáng tạo. Team nào có bạn là team đó chạy mượt.",
+    tags: ["Project Manager", "Creative Planner", "Producer", "Account Manager", "Team Leader"],
+    strengths: ["Tổ chức tốt", "Đáng tin cậy", "Tư duy hệ thống", "Dẫn dắt team"],
+    grows: ["Linh hoạt hơn", "Sáng tạo tự do", "Đón nhận thay đổi"],
+    quote: "Bạn có khả năng khiến một team hoạt động hiệu quả hơn rất nhiều."
+  }
+};
+
+const COMBOS = {
+  AC: { title: "Visual Storyteller", desc: "Bạn vừa sáng tạo nội dung vừa có gu thẩm mỹ mạnh. Không chỉ nghĩ ra ý tưởng hay — bạn còn muốn nó phải đẹp, thu hút và có cảm xúc. Bạn thường mê edit video, chú ý màu sắc và thích biến ý tưởng thành hình ảnh thực tế.", tags: ["Content Creator", "Video Editor", "Graphic Designer", "Creative Designer", "Art Creator"] },
+  CA: { title: "Visual Storyteller", desc: "Bạn vừa sáng tạo nội dung vừa có gu thẩm mỹ mạnh. Không chỉ nghĩ ra ý tưởng hay — bạn còn muốn nó phải đẹp, thu hút và có cảm xúc. Bạn thường mê edit video, chú ý màu sắc và thích biến ý tưởng thành hình ảnh thực tế.", tags: ["Content Creator", "Video Editor", "Graphic Designer", "Creative Designer", "Art Creator"] },
+  BD: { title: "Insight Builder", desc: "Bạn không chỉ có tư duy chiến lược mà còn hiểu cách mọi người suy nghĩ và hành động. Bạn thích quan sát, phân tích và làm việc rất có kế hoạch — nhưng luôn hướng đến kết quả thực tế và hiệu quả.", tags: ["Product Marketing", "Brand Strategist", "Planner", "Project Coordinator", "Campaign Exec"] },
+  DB: { title: "Insight Builder", desc: "Bạn không chỉ có tư duy chiến lược mà còn hiểu cách mọi người suy nghĩ và hành động. Bạn thích quan sát, phân tích và làm việc rất có kế hoạch — nhưng luôn hướng đến kết quả thực tế và hiệu quả.", tags: ["Product Marketing", "Brand Strategist", "Planner", "Project Coordinator", "Campaign Exec"] }
+};
+
+let cur = 0, scores = { A: 0, B: 0, C: 0, D: 0 };
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startQuiz() {
+  cur = 0;
+  scores = { A: 0, B: 0, C: 0, D: 0 };
+  show('screen-quiz');
+  renderQ();
+}
+
+function renderQ() {
+  const q = QUESTIONS[cur];
+  const keys = ['A', 'B', 'C', 'D'];
+  document.getElementById('prog-num').textContent = `${cur + 1} / 10`;
+  document.getElementById('prog-fill').style.width = `${(cur + 1) * 10}%`;
+  document.getElementById('q-step').textContent = `CÂU HỎI ${String(cur + 1).padStart(2, '0')}`;
+  document.getElementById('q-text').textContent = q.text;
+
+  const container = document.getElementById('options');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-key">${keys[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => pick(keys[i], btn);
+    container.appendChild(btn);
+  });
+}
+
+function pick(key, btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setTimeout(() => {
+    scores[key]++;
+    cur++;
+    if (cur >= 10) showResult();
+    else renderQ();
+  }, 260);
+}
+
+function showResult() {
+  show('screen-result');
+
+  const total = 10;
+  const pcts = {};
+  Object.keys(scores).forEach(k => pcts[k] = Math.round(scores[k] / total * 100));
+
+  const sorted = Object.entries(pcts).sort((a, b) => b[1] - a[1]);
+  const topKey = sorted[0][0];
+  const secKey = sorted[1][0];
+  const topPct = sorted[0][1];
+  const secPct = sorted[1][1];
+
+  const isBalanced = sorted.every(([, p]) => p >= 15 && p <= 35);
+  const isCombo = !isBalanced && secPct >= 30 && (topPct - secPct) <= 20;
+  const comboKey = topKey + secKey;
+
+  let title, desc, tags, strengths, grows, quote, typeName, emoji, isMulti = false;
+
+  if (isBalanced) {
+    isMulti = true;
+    title = "Multi-Creative";
+    desc = "Bạn là kiểu người đa năng trong môi trường sáng tạo. Bạn có thể thích nhiều vai trò cùng lúc và dễ thích nghi — vừa có tư duy sáng tạo, khả năng thẩm mỹ, suy nghĩ chiến lược và khả năng phối hợp tốt. Chưa muốn bị đóng khung? Hoàn toàn bình thường!";
+    tags = ["Creative Team", "Startup Environment", "Agency", "Multimedia Projects", "Campaign Team"];
+    strengths = ["Học nhanh", "Thích nghi tốt", "Đa năng", "Linh hoạt"];
+    grows = ["Tìm hướng chuyên sâu", "Xác định thế mạnh core"];
+    quote = "Hãy thử nhiều vai trò để tìm ra chất riêng mạnh nhất của mình.";
+    typeName = "Multi-Creative";
+    emoji = "✨";
+  } else if (isCombo && COMBOS[comboKey]) {
+    const combo = COMBOS[comboKey];
+    title = combo.title;
+    desc = combo.desc;
+    tags = combo.tags;
+    const p1 = PROFILES[topKey];
+    strengths = [...p1.strengths.slice(0, 2), ...PROFILES[secKey].strengths.slice(0, 2)];
+    grows = p1.grows;
+    quote = p1.quote;
+    typeName = `${TYPES[topKey].name} + ${TYPES[secKey].name}`;
+    emoji = TYPES[topKey].emoji;
+  } else {
+    const p = PROFILES[topKey];
+    title = p.title;
+    desc = p.desc;
+    tags = p.tags;
+    strengths = p.strengths;
+    grows = p.grows;
+    quote = p.quote;
+    typeName = p.typeName;
+    emoji = TYPES[topKey].emoji;
+  }
+
+  const barsHtml = sorted.map(([k, p]) => `
+    <div class="bar-row">
+      <div class="bar-meta">
+        <span class="bar-name" style="color:${TYPES[k].color}">${TYPES[k].emoji} ${TYPES[k].name}</span>
+        <span class="bar-pct">${p}%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="background:${TYPES[k].bar}" data-w="${p}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  const secondaryHtml = (!isMulti && secPct >= 20) ? `
+    <div class="secondary-card">
+      <span class="sec-icon">${TYPES[secKey].emoji}</span>
+      <div class="sec-text">
+        <strong>Secondary role: ${TYPES[secKey].name} (${secPct}%)</strong>
+        Bạn cũng có tố chất ${TYPES[secKey].name} khá mạnh — đó là combo đáng giá đó!
+      </div>
+    </div>
+  ` : '';
+
+  document.getElementById('result-content').innerHTML = `
+    <div class="result-header">
+      <span class="result-emoji">${emoji}</span>
+      <div class="result-type-label">${typeName.toUpperCase()}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-role-pct">${topPct}% ${TYPES[topKey].name}</div>
+    </div>
+
+    <div class="bars-card">
+      <div class="bars-title">PHÂN TÍCH THIÊN HƯỚNG CỦA BẠN</div>
+      ${barsHtml}
+    </div>
+
+    <div class="desc-card"><p>${desc}</p></div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">ĐIỂM MẠNH</div>
+        <ul>${strengths.map(s => `<li>${s}</li>`).join('')}</ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">CẦN PHÁT TRIỂN</div>
+        <ul>${grows.map(s => `<li>${s}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="tags-card">
+      <div class="tags-card-title">✦ BẠN PHÙ HỢP VỚI</div>
+      <div class="tags">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+
+    ${secondaryHtml}
+
+    <div class="quote-card">
+      <span class="quote-mark">"</span>
+      <p>${quote}</p>
+    </div>
+
+    <button class="btn-retry" onclick="startQuiz()">↩ Thử lại nào!</button>
+  `;
+
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.w + '%';
+    });
+  }, 100);
+}
+</script>
+</body>
+</html>
